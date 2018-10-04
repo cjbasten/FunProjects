@@ -13,11 +13,12 @@ isTextFile = re.compile(r'\w*.txt$')
 for i in files:
     textFile = isTextFile.search(i)
     if textFile is not None:
-        print(textFile.group())
+        # print(textFile.group())
         openTextFile = open(i)
         readOpenTextFile = openTextFile.read()
-        print(readOpenTextFile)
+        # print(readOpenTextFile)
+        openTextFile.close()
         searchForText = userRegEx.findall(readOpenTextFile)
-        # searchForText is a list of everything found. Just need to print it
-
-# Print strings found by user supplied regular expression
+        # Print strings found by user supplied regular expression
+        for foundText in searchForText:
+            print(foundText)
