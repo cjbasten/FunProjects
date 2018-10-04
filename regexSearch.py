@@ -21,4 +21,4 @@ for i in files:
         searchForText = userRegEx.findall(readOpenTextFile)
         # Print strings found by user supplied regular expression
         for foundText in searchForText:
-            print(foundText)
+            print('Match found: ' + foundText)
