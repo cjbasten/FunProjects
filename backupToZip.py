@@ -5,8 +5,7 @@ import zipfile, os
 
 
 def backupToZip(folder):
-    # Backup the entire contents of "folder"into a ZIP file.
-
+    # Backup the entire contents of "folder" into a ZIP file.
     folder = os.path.abspath(folder)    # make sure folder is absolute
 
     # Figure out the filename this code should use based on what files already exist.
@@ -23,8 +22,8 @@ def backupToZip(folder):
 
     # Walk the entire folder tree and compress the files in each folder.
     for foldername, subfolders, filenames in os.walk(folder):
-        print('Adding files in %s...' % (foldername))
-        # Add the current folder to teh ZIP file.
+        print('Adding files in %s...' % foldername)
+        # Add the current folder to the ZIP file.
         backupZip.write(foldername)
 
         # Add all the files in this folder to the ZIP file.
