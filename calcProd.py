@@ -2,7 +2,7 @@ import time
 
 
 def calcProd():
-    # Calculate the product of the first 100,00 numbers.
+    # Calculate the product of the first 100,000 numbers.
     product = 1
     for i in range(1, 100000):
         product = product * i

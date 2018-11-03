@@ -12,3 +12,4 @@ threadObj = threading.Thread(target=takeANap)
 threadObj.start()
 
 print('End of program.')
+
