@@ -13,7 +13,8 @@ if len(sys.argv) < 2:
 location = ''.join(sys.argv[1:])
 
 # Download the JSON data from OpenWeatherMap.org's API.
-url = 'http://api.openweathermap.org/data/2.5/forecast/daily?q=%s&cnt=3&APPID=c8166c9a090f2e576a8c4912320d041d' % location
+# url = 'http://api.openweathermap.org/data/2.5/forecast/daily?q=%s&cnt=3&APPID=c8166c9a090f2e576a8c4912320d041d' % location
+url = 'http://api.openweathermap.org/data/2.5/weather?q=%s,uk&APPID=c8166c9a090f2e576a8c4912320d041d' % location
 response = requests.get(url)
 response.raise_for_status()
 
@@ -29,3 +30,5 @@ print(w[1]['weather'][0]['main'], '-', w[1]['weather'][0]['description'])
 print()
 print('Day after tomorrow:')
 print(w[2]['weather'][0]['main'], '-', w[2]['weather'][0]['description'])
+
+
