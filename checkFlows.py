@@ -4,6 +4,7 @@ from datetime import datetime
 
 
 def read_file(max_time: int, write_interval: int, original_file, new_file):
+    """Copy the contents of a file and append it to a different file."""
     start_time = time.time()  # remember when we started
     while (time.time() - start_time) < max_time:
         with open(original_file) as hello:
@@ -23,4 +24,3 @@ for i in range(test_num):
     interval = int(input('Enter the seconds you would like between each write to the new file: '))
     t = Thread(target=read_file, args=(timer, interval, orig_file, dest_file,))
     t.start()
-
