@@ -1,5 +1,6 @@
 import time
 from threading import Thread
+from datetime import datetime
 
 
 def read_file(max_time: int, write_interval: int, original_file, new_file):
@@ -9,7 +10,7 @@ def read_file(max_time: int, write_interval: int, original_file, new_file):
             new_mad_lib = hello.read()
 
         with open(new_file, 'a') as new:
-            new.write('Time: ' + str(time.time()) + '\n' + new_mad_lib + '\n\n')
+            new.write('Time: ' + str(datetime.utcnow()) + '\n' + new_mad_lib + '\n\n')
         print(new_mad_lib)
         time.sleep(write_interval)
 
@@ -23,4 +24,5 @@ for i in range(test_num):
     interval = int(input('Enter the seconds you would like between each write to the new file: '))
     t = Thread(target=read_file, args=(timer, interval, orig_file, dest_file,))
     t.start()
+
 
