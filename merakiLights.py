@@ -18,13 +18,16 @@ try:
 except:
     sys.exit('Incorrect API key or org ID, as no valid data returned')
 networks = json.loads(session.get('https://api.meraki.com/api/v0/organizations/' + ORG_ID + '/networks', headers=headers).text)
+
+# Messing around with comprehensions
 NET_ID = [v for network in networks for k, v in network.items()]
 inventory = json.loads(session.get('https://api.meraki.com/api/v0/organizations/' + ORG_ID + '/inventory', headers=headers).text)
 appliances = [device for device in inventory if device['model'][:2] in ('MX', 'Z1', 'Z3', 'vM') and device['networkId'] is not None]
 devices = [device for device in inventory if device not in appliances and device['networkId'] is not None]
-payload = {'timespan':50}
+payload = {'timespan':80}
 clients = json.loads(session.get('https://api.meraki.com/api/v0/devices/Q2KD-E8R3-PYQL/clients/', headers=headers, params=payload).text)
 
 print(devices)
+# NET_ID[0] is the network id for The Castle
 print(NET_ID)
 print(clients)
