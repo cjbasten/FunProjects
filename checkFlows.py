@@ -1,6 +1,7 @@
 import time
 from threading import Thread
 from datetime import datetime
+import subprocess
 
 
 def read_file(max_time: int, write_interval: int, original_file, new_file):
@@ -12,7 +13,6 @@ def read_file(max_time: int, write_interval: int, original_file, new_file):
 
         with open(new_file, 'a') as new:
             new.write('Time: ' + str(datetime.utcnow()) + '\n' + new_mad_lib + '\n\n')
-        print(new_mad_lib)
         time.sleep(write_interval)
 
 
