@@ -14,7 +14,7 @@ except ImportError:
 session = requests.session()
 headers = {'X-Cisco-Meraki-API-Key': API_KEY, 'Content-Type': 'application/json'}
 
-# Verify API access is working by pulling the Organization Name, if it fails raise exception and exit
+# Verify API access is working by pulling the Organization Name, if it fails display error message and exit
 try:
     name = json.loads(session.get('https://api.meraki.com/api/v0/organizations/' + ORG_ID, headers=headers).text)['name']
 except:
@@ -23,6 +23,7 @@ networks = json.loads(session.get('https://api.meraki.com/api/v0/organizations/'
 
 # Messing around with comprehensions
 NET_ID = [v for network in networks for k, v in network.items()]
+
 inventory = json.loads(session.get('https://api.meraki.com/api/v0/organizations/' + ORG_ID + '/inventory', headers=headers).text)
 payload = {'timespan':80}
 clients = json.loads(session.get('https://api.meraki.com/api/v0/devices/Q2KD-E8R3-PYQL/clients/', headers=headers, params=payload).text)
