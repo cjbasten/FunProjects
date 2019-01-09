@@ -22,12 +22,18 @@ except:
 networks = json.loads(session.get('https://api.meraki.com/api/v0/organizations/' + ORG_ID + '/networks', headers=headers).text)
 
 # Messing around with comprehensions
-NET_ID = [v for network in networks for k, v in network.items()]
+NET_ID = [kv for network in networks for kv in network.items()]
 
 inventory = json.loads(session.get('https://api.meraki.com/api/v0/organizations/' + ORG_ID + '/inventory', headers=headers).text)
 payload = {'timespan':80}
 clients = json.loads(session.get('https://api.meraki.com/api/v0/devices/Q2KD-E8R3-PYQL/clients/', headers=headers, params=payload).text)
 
 # NET_ID[0] is the network id for The Castle
-print(NET_ID)
-print(clients)
+# print(NET_ID)
+
+for i in clients:
+    print(i)
+    if i.get('description') == 'Corys iPhone':
+        print('hurray')
+    else:
+        print('boo')
