@@ -25,15 +25,18 @@ networks = json.loads(session.get('https://api.meraki.com/api/v0/organizations/'
 NET_ID = [kv for network in networks for kv in network.items()]
 
 inventory = json.loads(session.get('https://api.meraki.com/api/v0/organizations/' + ORG_ID + '/inventory', headers=headers).text)
-payload = {'timespan':80}
-clients = json.loads(session.get('https://api.meraki.com/api/v0/devices/Q2KD-E8R3-PYQL/clients/', headers=headers, params=payload).text)
+payload = {'timespan': 120}
+
+ap_one = json.loads(session.get('https://api.meraki.com/api/v0/devices/Q2KD-E8R3-PYQL/clients/', headers=headers, params=payload).text)
+ap_two = json.loads(session.get('https://api.meraki.com/api/v0/devices/Q2KD-Z79J-2GM7/clients/', headers=headers, params=payload).text)
 
 # NET_ID[0] is the network id for The Castle
 # print(NET_ID)
 
-for i in clients:
-    print(i)
-    if i.get('description') == 'Corys iPhone':
-        print('hurray')
+roommate_list = ['Corys iPhone', 'Phils iPhone', 'jakes-iPhone', 'Kuhus-iPhone', 'Android']
+
+for i in (ap_one + ap_two):
+    if i.get('description') in roommate_list:
+        print('Hello, ' + str(i.get('description')))
     else:
-        print('boo')
+        print('Nothing to see here')  # Turn off Philips Hue Bulbs
