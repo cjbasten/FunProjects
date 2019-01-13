@@ -16,22 +16,27 @@ headers = {'X-Cisco-Meraki-API-Key': API_KEY, 'Content-Type': 'application/json'
 
 # Verify API access is working by pulling the Organization Name, if it fails display error message and exit
 try:
-    name = json.loads(session.get('https://api.meraki.com/api/v0/organizations/' + ORG_ID, headers=headers).text)['name']
+    name = json.loads(session.get('https://api.meraki.com/api/v0/organizations/'
+                                  + ORG_ID, headers=headers).text)['name']
 except:
     sys.exit('Incorrect API key or org ID, as no valid data returned')
-networks = json.loads(session.get('https://api.meraki.com/api/v0/organizations/' + ORG_ID + '/networks', headers=headers).text)
+networks = json.loads(session.get('https://api.meraki.com/api/v0/organizations/'
+                                  + ORG_ID + '/networks', headers=headers).text)
 
 # Messing around with comprehensions
-NET_ID = [kv for network in networks for kv in network.items()]
+NET_ID = [net for network in networks for kv in network.items() for net in kv]
 
-inventory = json.loads(session.get('https://api.meraki.com/api/v0/organizations/' + ORG_ID + '/inventory', headers=headers).text)
-payload = {'timespan': 120}
+devices = json.loads(session.get('https://api.meraki.com/api/v0/networks/'
+                                 + str(NET_ID[1]) + '/devices/', headers=headers).text)
 
-ap_one = json.loads(session.get('https://api.meraki.com/api/v0/devices/Q2KD-E8R3-PYQL/clients/', headers=headers, params=payload).text)
-ap_two = json.loads(session.get('https://api.meraki.com/api/v0/devices/Q2KD-Z79J-2GM7/clients/', headers=headers, params=payload).text)
+# payload defines up to how many seconds the client could have been associated
+payload = {'timespan': 300}
 
-# NET_ID[0] is the network id for The Castle
-# print(NET_ID)
+# Could pull inventory of APs and make a list of serials, then iterate through that list in the for loop
+ap_one = json.loads(session.get('https://api.meraki.com/api/v0/devices/Q2KD-E8R3-PYQL/clients/',
+                                headers=headers, params=payload).text)
+ap_two = json.loads(session.get('https://api.meraki.com/api/v0/devices/Q2KD-Z79J-2GM7/clients/',
+                                headers=headers, params=payload).text)
 
 roommate_list = ['Corys iPhone', 'Phils iPhone', 'jakes-iPhone', 'Kuhus-iPhone', 'Android']
 
