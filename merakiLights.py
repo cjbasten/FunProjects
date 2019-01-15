@@ -6,10 +6,12 @@ import sys
 # Import API key and org ID from login.py
 try:
     import login
-    (API_KEY, ORG_ID) = (login.api_key, login.org_id)
+    (API_KEY, ORG_ID, HUE_USER, HUE_IP) = (login.api_key, login.org_id, login.hue_user, login.hue_ip)
 except ImportError:
     API_KEY = input('Enter your Dashboard API key: ')
-    ORG_ID = input('Enter your organization ID: ')
+    ORG_ID = input('Enter your Organization ID: ')
+    HUE_USER = input('Enter your Philips Hue Username')
+    HUE_IP = input('Enter your Philips Hue IP')
 
 session = requests.session()
 headers = {'X-Cisco-Meraki-API-Key': API_KEY, 'Content-Type': 'application/json'}
@@ -20,6 +22,7 @@ try:
                                   + ORG_ID, headers=headers).text)['name']
 except:
     sys.exit('Incorrect API key or org ID, as no valid data returned')
+
 networks = json.loads(session.get('https://api.meraki.com/api/v0/organizations/'
                                   + ORG_ID + '/networks', headers=headers).text)
 
@@ -30,7 +33,7 @@ devices = json.loads(session.get('https://api.meraki.com/api/v0/networks/'
                                  + str(NET_ID[1]) + '/devices/', headers=headers).text)
 
 # payload defines up to how many seconds the client could have been associated
-payload = {'timespan': 300}
+payload = {'timespan': 120}
 
 # Could pull inventory of APs and make a list of serials, then iterate through that list in the for loop
 ap_one = json.loads(session.get('https://api.meraki.com/api/v0/devices/Q2KD-E8R3-PYQL/clients/',
@@ -45,3 +48,9 @@ for i in (ap_one + ap_two):
         print('Hello, ' + str(i.get('description')))
     else:
         print('Nothing to see here')  # Turn off Philips Hue Bulbs
+
+philips_hue = json.loads(session.get('http://' + HUE_IP + '/api/' + HUE_USER + '/lights').text)
+r = session.put('http://' + HUE_IP + '/api/' + HUE_USER + '/lights/19/state', data={'on': False})
+print(r.status_code)
+r
+print(philips_hue)
