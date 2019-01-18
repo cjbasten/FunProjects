@@ -42,15 +42,14 @@ ap_two = json.loads(session.get('https://api.meraki.com/api/v0/devices/Q2KD-Z79J
                                 headers=headers, params=payload).text)
 
 roommate_list = ['Corys iPhone', 'Phils iPhone', 'jakes-iPhone', 'Kuhus-iPhone', 'Android']
-
-for i in (ap_one + ap_two):
-    if i.get('description') in roommate_list:
-        print('Hello, ' + str(i.get('description')))
-    else:
-        print('Nothing to see here')  # Turn off Philips Hue Bulbs
+client_list = [client.get('description') for client in (ap_one + ap_two)]
 
 philips_hue = json.loads(session.get('http://' + HUE_IP + '/api/' + HUE_USER + '/lights').text)
-r = session.put('http://' + HUE_IP + '/api/' + HUE_USER + '/lights/19/state', data={'on': False})
-print(r.status_code)
-r
 print(philips_hue)
+
+# Turn off lights if list of roommates does not intersect with client list
+if len(set(client_list).intersection(set(roommate_list))) == 0:
+    print("ain't nothing in this list, yo")
+    turn_off_light = session.put('http://' + HUE_IP + '/api/' + HUE_USER + '/lights/10/state', json={"on": True})
+else:
+    turn_on_light = session.put('http://' + HUE_IP + '/api/' + HUE_USER + '/lights/10/state', json={"on": True})
