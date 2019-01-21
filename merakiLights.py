@@ -55,9 +55,8 @@ light_list = set(range(1, number_of_lights))
 # print(light_list - blacklist_lights)
 # Turn off lights if roommates list does not intersect with client list
 
-#get groups from hue
+# get groups from hue
 groups = session.get(HUE_URL + 'groups').json()
-print(groups.items())
 group_dict = {}
 for k, v in groups.items():
     for j, h in v.items():
