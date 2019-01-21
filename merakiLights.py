@@ -61,6 +61,7 @@ print(groups.items())
 for k, v in groups.items():
     for j, h in v.items():
         if j == 'name' or 'lights':
+            print(k)
             print(h)
 
 '''
