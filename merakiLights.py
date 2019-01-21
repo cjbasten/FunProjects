@@ -58,11 +58,14 @@ light_list = set(range(1, number_of_lights))
 #get groups from hue
 groups = session.get(HUE_URL + 'groups').json()
 print(groups.items())
+group_dict = {}
 for k, v in groups.items():
     for j, h in v.items():
-        if j == 'name' or 'lights':
-            print(k)
-            print(h)
+        if j == 'name':
+            name = h
+        if j == 'lights':
+            group_dict[name] = k, h
+print(group_dict)
 
 '''
 {'phils room' -> {id: 1, lights: [2,3,4,5]}},
