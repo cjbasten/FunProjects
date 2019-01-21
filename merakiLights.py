@@ -7,11 +7,13 @@ import sys
 try:
     import login
     (API_KEY, ORG_ID, HUE_USER, HUE_IP) = (login.api_key, login.org_id, login.hue_user, login.hue_ip)
+    HUE_URL = 'http://'+HUE_IP+'/api/'+HUE_USER+'/'
 except ImportError:
     API_KEY = input('Enter your Dashboard API key: ')
     ORG_ID = input('Enter your Organization ID: ')
     HUE_USER = input('Enter your Philips Hue Username')
     HUE_IP = input('Enter your Philips Hue IP')
+    HUE_URL = 'http://' + HUE_IP + '/api/' + HUE_USER + '/'
 
 session = requests.session()
 headers = {'X-Cisco-Meraki-API-Key': API_KEY, 'Content-Type': 'application/json'}
@@ -44,20 +46,43 @@ ap_two = json.loads(session.get('https://api.meraki.com/api/v0/devices/Q2KD-Z79J
 roommate_list = ['Corys iPhone', 'Phils iPhone', 'jakes-iPhone', 'Kuhus-iPhone', 'Android']
 client_list = [client.get('description') for client in (ap_one + ap_two)]
 
-philips_hue = json.loads(session.get('http://' + HUE_IP + '/api/' + HUE_USER + '/lights').text)
-print(philips_hue)
+# philips_hue = json.loads(session.get('http://' + HUE_IP + '/api/' + HUE_USER + '/lights').text)
+# print(philips_hue)
 
+number_of_lights = 20
+blacklist_lights = set([2, 3, 4, 5])
+light_list = set(range(1, number_of_lights))
+# print(light_list - blacklist_lights)
 # Turn off lights if roommates list does not intersect with client list
+
+#get groups from hue
+groups = session.get(HUE_URL + 'groups').json()
+print(groups.items())
+for k, v in groups.items():
+    for j, h in v.items():
+        if j == 'name' or 'lights':
+            print(h)
+
+'''
+{'phils room' -> {id: 1, lights: [2,3,4,5]}},
+{'corys room' -> {id: 7, lights: [18.19]}}
+
+if groups.get(phils room) != None
+
+'''
+
 if len(set(client_list).intersection(set(roommate_list))) == 0:
     print("ain't nothing in this list, yo")
-    for i in range(20):
-        turn_off_light = session.put('http://' + HUE_IP + '/api/' + HUE_USER + '/lights/' + str(i) + '/state',
+    for i in range(light_list - blacklist_lights):
+        turn_off_light = session.put(HUE_URL + 'lights/' + str(i) + '/state',
                                      json={"on": False})
 else:
-    for i in range(20):
-        turn_on_light = session.put('http://' + HUE_IP + '/api/' + HUE_USER + '/lights/' + str(i) + '/state',
-                                    json={"on": True})
+    if len(set(client_list).intersection(set(roommate_list))) == 1:
+        for i in range(20):
+            turn_on_light = session.put(HUE_URL + 'lights/' + str(i) + '/state',
+                                        json={"on": True})
 
 # TO DO
 # Integrate with OAuth to allow for polling lights outside of network
 # Deploy to Phil's web server
+# Phil asked for his lights to be blacklisted
