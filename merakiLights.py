@@ -47,13 +47,17 @@ client_list = [client.get('description') for client in (ap_one + ap_two)]
 philips_hue = json.loads(session.get('http://' + HUE_IP + '/api/' + HUE_USER + '/lights').text)
 print(philips_hue)
 
-# Turn off lights if list of roommates does not intersect with client list
+# Turn off lights if roommates list does not intersect with client list
 if len(set(client_list).intersection(set(roommate_list))) == 0:
     print("ain't nothing in this list, yo")
-    turn_off_light = session.put('http://' + HUE_IP + '/api/' + HUE_USER + '/lights/19/state', json={"on": False})
+    for i in range(20):
+        turn_off_light = session.put('http://' + HUE_IP + '/api/' + HUE_USER + '/lights/' + str(i) + '/state',
+                                     json={"on": False})
 else:
-    turn_on_light = session.put('http://' + HUE_IP + '/api/' + HUE_USER + '/lights/10/state', json={"on": True})
-turn_on_light = session.put('http://' + HUE_IP + '/api/' + HUE_USER + '/lights/18/state', json={"on": True})
+    for i in range(20):
+        turn_on_light = session.put('http://' + HUE_IP + '/api/' + HUE_USER + '/lights/' + str(i) + '/state',
+                                    json={"on": True})
+
 # TO DO
 # Integrate with OAuth to allow for polling lights outside of network
 # Deploy to Phil's web server
