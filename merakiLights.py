@@ -66,14 +66,6 @@ for k, v in groups.items():
             group_dict[name] = k, h
 print(group_dict)
 
-'''
-{'phils room' -> {id: 1, lights: [2,3,4,5]}},
-{'corys room' -> {id: 7, lights: [18.19]}}
-
-if groups.get(phils room) != None
-
-'''
-
 if len(set(client_list).intersection(set(roommate_list))) == 0:
     print("ain't nothing in this list, yo")
     for i in range(light_list - blacklist_lights):
