@@ -1,8 +1,6 @@
 import json
 import requests
 import sys
-import traceback
-import logging
 
 
 # Import API key and org ID from login.py
