@@ -32,20 +32,18 @@ csv_columns = ["number", "name", "tags", "enabled", "poeEnabled", "type", "vlan"
 # Array of switch serials for testing
 test_switches = ['Q2MW-244T-ACYT', 'Q2HP-FURK-2ALN']
 
+# Iterate through each switch in the list.
 for switch in test_switches:
-	csv_file = switch + ".csv"
-	print(switch)
-	test_array = json.loads(session.get('https://api.meraki.com/api/v0/devices/' + switch + '/switchPorts', headers = headers).text)
+	csv_file = switch + '.csv'
+	# Iterate through each row in the .csv and create a dictionary with the column as the key and the row as the value
+	with open(csv_file) as csvfile:
+		reader = csv.DictReader(csvfile)
+		for row in reader:
 
-	# Appends the dictionaries returned by the GET request to a list for use in the csv file
-	switchports = []
-	for dict_result in test_array:
-		switchports.append(dict_result)
-	try:
-		with open(csv_file, 'w') as csvfile:
-			writer = csv.DictWriter(csvfile, fieldnames=csv_columns)
-			writer.writeheader()
-			for data in switchports:
-				writer.writerow(data)
-	except IOError:
-		print("I/O error")
+			# Create a new list of keys with empty strings in them. This is due to not being able to modify a dictionary 
+			# while iterating through it. Then iterate through the list and delete the correpsonding key from the dictionary.
+			empty_keys = [k for k,v in row.iteritems() if not v]
+			for k in empty_keys:
+				del row[k]
+			print(row)
+			test_request = requests.put('https://api.meraki.com/api/v0/devices/' + switch + '/switchPorts/' + row['number'], headers = headers, data = json.dumps(row)).text
